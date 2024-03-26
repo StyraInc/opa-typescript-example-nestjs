@@ -4,8 +4,13 @@ import { Reflector } from '@nestjs/core';
 
 import { IS_PUBLIC_KEY } from '../auth/decorators/public';
 import { AuthzService } from './authz.service';
-import { AUTHZ_EXTRA, AUTHZ_PATH, Request } from './decorators/action';
-import { Input, ToInput } from 'opa/highlevel';
+import {
+  AUTHZ_EXTRA,
+  AUTHZ_DECISION,
+  AUTHZ_PATH,
+  Request,
+} from './decorators/action';
+import { Input, ToInput, Result } from 'opa/highlevel';
 
 class InputPayload implements ToInput {
   private input: Input;
@@ -53,6 +58,10 @@ export class AuthzGuard implements CanActivate {
         context.getClass(),
       ]) || this.configService.getOrThrow('OPA_PATH');
 
-    return await this.authzService.authorize(inp, authzPath);
+    const fromResult = this.reflector.getAllAndOverride<(_: Result) => boolean>(
+      AUTHZ_DECISION,
+      [context.getHandler(), context.getClass()],
+    );
+    return await this.authzService.authorize(inp, authzPath, fromResult);
   }
 }
