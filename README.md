@@ -1,5 +1,8 @@
 # opa-typescript NestJS example
 
+> [!IMPORTANT]
+> **This code has been moved to [StyraInc/opa-sdk-demos](https://github.com/StyraInc/opa-sdk-demos).**
+
 ## Description
 
 Based on the [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
